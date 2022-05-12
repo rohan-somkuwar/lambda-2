@@ -1,0 +1,31 @@
+name: lambda-2
+
+
+on:
+  push:
+  branches:
+    - main
+
+jobs:
+  deploy:
+  name: deploy
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      python3: 3.8
+
+  steps:
+  - uses: actions/checkout@v2
+  - name: Use Python ${{matrix.python3-version}}
+  - uses: actions/setup-python3@1
+  - with:
+    node-version: ${{ matrix.python3-version}}
+
+  - name: serverless deploy
+    uses: serverless/github-action@main
+    with: 
+      args: deploy
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{secret.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secret.AWS_SECRET_ACCESS_KEY}}
